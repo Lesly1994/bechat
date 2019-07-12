@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      html {
+        padding-bottom: 50px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font: 13px Helvetica, Arial;
+      }
+      form {
+        position: fixed;
+        background: #fff;
+        padding: 3px;
+        bottom: 0;
+        width: 100%;
+      }
+      form input {
+        padding: 10px;
+        width: 90%;
+        margin-right: 0.5%;
+      }
+      input {
+        border-radius: 50px;
+      }
+      form button {
+        width: 9%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages li {
+        
+        clear: both;
+        padding: 20px;
+        border-radius: 30px;
+        margin-bottom: 2px;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+      .him{
+        background: #eee;
+        float: left;
+      }
+      .me{
+        float: right;
+        background: #0084ff;
+        color: #fff;
+      }
+      .him + .me{
+        border-bottom-right-radius: 5px;
+      }
+
+      .me + .me{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+
+      .me:last-of-type {
+        border-bottom-right-radius: 30px;
+      }
+    </style>
+    <title>An Awesome chat for Becode</title>
+  </head>
+  <body>
+    <!-- <li class="login page">
+      <div class="form">
+        <h2 class="title">Veuillez Entrer votre Pseudo</h2>
+        <input id="username" class="" type="text" />
+      </div>
+    </li> -->
+
+    <ul id="messages"></ul>
+
+    <form action=""><input type="text" required id="message" autocomplete="off" placeholder="Type here"/><button id="send">Send</button></form>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.min.js"></script>
+    <script type="text/javascript">
+      (() => {
+        let username = prompt('Please type your username');
+        const socket = io.connect();
+        let message = document.getElementById('message'),
+          container = document.getElementById('messages'),
+          send = document.getElementById('send');
+
+        // Request all messages
+        socket.emit('request:message:all');
+        socket.on('respond:message:all', (event) => {
+          console.log(event)
+        })
+
+        // Handling send clicking
+        send.addEventListener('click', e => {
+          e.preventDefault();
+
+          socket.emit("message", {
+            username,
+            message: message.value
+          });
+          message.value = null;
+        });
+        socket.on("broadcast:message", event => {
+          console.log(event);
+          let li = document.createElement("li");
+          li.innerHTML = event.username+': '+event.message + ' ' + event.created;
+          li.classList.add('him');
+          container.appendChild(li);
+          window.scrollTo(0,document.querySelector("html").scrollHeight);
+        });
+      })();
+    </script>
+  </body>
+</html>

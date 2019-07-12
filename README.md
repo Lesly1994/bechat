@@ -1,2 +1,0 @@
-# bechat
-Created with CodeSandbox
