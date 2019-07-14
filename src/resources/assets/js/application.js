@@ -4,9 +4,9 @@ let message = document.getElementById("message"),
   form = document.getElementById('message-form');
 
 firebase.initializeApp({
-  apiKey: "AIzaSyDlRsOtf_KW9lrQi-I6uCMT5O8XTD4AUmc",
-  databaseURL: "https://sandbox-af137.firebaseio.com",
-  authDomain: "sandbox-af137.firebaseapp.com"
+  apiKey: "AIzaSyAzN1T3IG8e-0BAB228RPnmsaaqkre_8ag",
+  databaseURL: "https://becode-joshua.firebaseio.com",
+  authDomain: "becode-joshua.firebaseapp.com"
 });
 
 window.onload = () => {
