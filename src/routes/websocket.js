@@ -1,4 +1,3 @@
-const User = require("../models/User");
 const Message = require("../models/Message");
 
 module.exports = (io, settings) => {
@@ -13,14 +12,15 @@ module.exports = (io, settings) => {
         });
     });
 
-    socket.on("message:create", event => {
-      Message.create({ username: event.username, message: event.message }, (error, message) => {
+    socket.on('username:update', username => {
+      io.emit('username:updated', username, socket.username);
+      socket.username = username;
+    });
+
+    socket.on("message:create", message => {
+      Message.create({ username: message.username, content: message.content }, (error, message) => {
         if (error) console.error(error);
-        io.emit("message:created", {
-          username: event.username,
-          message: event.message,
-          created: new Date()
-        });
+        io.emit("message:created", message);
       });
     });
 
