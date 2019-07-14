@@ -1,23 +1,22 @@
 const User = require("../models/User");
 const Message = require("../models/Message");
 
-module.exports = io => {
+module.exports = (io, settings) => {
   io.on("connect", socket => {
-    console.log("A user has been connected");
+    if (settings.debug) console.log("A user has been connected:", socket.id);
 
-    // Send all messages to front
-    socket.on("request:message:all", () => {
+    socket.on("message:history", () => {
       Message.find()
         .limit(100)
         .then(messages => {
-          socket.emit("respond:message:all", messages);
+          socket.emit("message:history", messages);
         });
     });
 
-    socket.on("message", event => {
+    socket.on("message:create", event => {
       Message.create({ username: event.username, message: event.message }, (error, message) => {
         if (error) console.error(error);
-        io.emit("broadcast:message", {
+        io.emit("message:created", {
           username: event.username,
           message: event.message,
           created: new Date()
@@ -25,18 +24,8 @@ module.exports = io => {
       });
     });
 
-    // socket.on("username:update", event => {
-    //   socket.username = event.username;
-    // });
-
-    // socket.on("typing", event => {
-    //   io.emit("broadcast:typing", {
-    //     username: socket.username
-    //   });
-    // });
-
     socket.on("disconnect", () => {
-      console.log("A user has been disconnected");
+      if (settings.debug) console.log("A user has been disconnected:", socket.id);
     });
   });
 };
