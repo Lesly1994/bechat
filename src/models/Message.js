@@ -5,8 +5,8 @@ module.exports = mongoose.model(
   new mongoose.Schema(
     {
       username: String,
-      message: String
+      content: String
     },
-    { versionKey: false }
+    { versionKey: false, timestamps: true }
   )
 );
