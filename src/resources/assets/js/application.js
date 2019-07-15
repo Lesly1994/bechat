@@ -1,4 +1,4 @@
-const socket = io('https://be-chat.herokuapp.com');
+const socket = io();
 let message = document.getElementById("message"),
   target = document.getElementById("messages"),
   form = document.getElementById('message-form');
@@ -23,7 +23,7 @@ window.onload = () => {
           let entry = document.createElement('li');
           entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.user.username}: <i>${message.content}</i>`;
           
-          if (message.user.username === user.displayName || message.user.username === user.email) {
+          if (message.user.uid === user.providerData[0].uid) {
             entry.classList.add('me');
           } else {
             entry.classList.add('him')
@@ -38,7 +38,7 @@ window.onload = () => {
         let entry = document.createElement('li');
         entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.user.username}: <i>${message.content}</i>`;
         
-        if (message.user.username === user.displayName || message.username === user.email) {
+        if (message.user.uid === user.providerData[0].uid) {
             entry.classList.add('me');
           } else {
             entry.classList.add('him')
@@ -53,8 +53,10 @@ window.onload = () => {
 
       form.addEventListener("submit", e => {
         e.preventDefault();
+
         socket.emit("message:create", {
           user: {
+            uid: user.providerData[0].uid,
             username: (user.displayName != null) ? user.displayName : user.email,
             photo: user.photoURL
           },
