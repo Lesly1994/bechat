@@ -12,6 +12,7 @@ firebase.initializeApp({
 window.onload = () => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
+
       socket.emit("message:history");
       socket.emit("username:update", (user.displayName != null) ? user.displayName : user.email);
 
@@ -20,34 +21,32 @@ window.onload = () => {
         document.body.classList.remove("d-none");
         messages.forEach(message => {
           let entry = document.createElement('li');
-          entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.username}: <i>${message.content}</i>`;
+          entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.user.username}: <i>${message.content}</i>`;
           
-          if (message.username === user.displayName || message.username === user.email) {
+          if (message.user.username === user.displayName || message.user.username === user.email) {
             entry.classList.add('me');
           } else {
             entry.classList.add('him')
           }
 
           target.appendChild(entry);
-
-          window.scrollTo(0, document.body.scrollHeight);
         });
+        window.scrollTo(0, 999999);
       });
 
       socket.on('message:created', (message) => {
         let entry = document.createElement('li');
-        entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.username}: <i>${message.content}</i>`;
+        entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.user.username}: <i>${message.content}</i>`;
         
-        if (message.username === user.displayName || message.username === user.email) {
+        if (message.user.username === user.displayName || message.username === user.email) {
             entry.classList.add('me');
           } else {
             entry.classList.add('him')
           }
 
         target.appendChild(entry);
-
         window.scroll({
-          top: document.body.scrollHeight, 
+          top: document.body.scrollHeight * 9999, 
           behavior: 'smooth'
         });
       });
@@ -55,7 +54,10 @@ window.onload = () => {
       form.addEventListener("submit", e => {
         e.preventDefault();
         socket.emit("message:create", {
-          username: (user.displayName != null) ? user.displayName : user.email,
+          user: {
+            username: (user.displayName != null) ? user.displayName : user.email,
+            photo: user.photoURL
+          },
           content: message.value
         });
 
