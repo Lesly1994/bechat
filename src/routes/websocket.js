@@ -18,7 +18,7 @@ module.exports = (io, settings) => {
     });
 
     socket.on("message:create", message => {
-      Message.create({ username: message.username, content: message.content }, (error, message) => {
+      Message.create({ user: message.user, content: message.content }, (error, message) => {
         if (error) console.error(error);
         io.emit("message:created", message);
       });
