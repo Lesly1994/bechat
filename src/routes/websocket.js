@@ -13,7 +13,7 @@ module.exports = (io, settings) => {
     });
 
     socket.on('username:update', username => {
-      io.emit('username:updated', username, socket.username);
+      io.emit('username:updated', username);
       socket.username = username;
     });
 
