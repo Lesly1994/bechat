@@ -63,26 +63,26 @@ form button {
   background: #dee2e6;
 }
 
-// .him {
-//   background: #eee;
-//   float: left;
-// }
+.him {
+  background: white !important;
+  float: left;
+}
 
-// .me {
-//   float: right;
-//   background: #0084ff;
-//   color: #fff;
-// }
+.me {
+  float: right;
+  background: blue !important;
+  color: #fff;
+}
 
-// .him+.me {
-//   border-bottom-right-radius: 5px;
-// }
+.him+.me {
+  border-bottom-right-radius: 5px;
+}
 
-// .me+.me {
-//   border-top-right-radius: 5px;
-//   border-bottom-right-radius: 5px;
-// }
+.me+.me {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 
-// .me:last-of-type {
-//   border-bottom-right-radius: 30px;
-// }
+.me:last-of-type {
+  border-bottom-right-radius: 30px;
+}
