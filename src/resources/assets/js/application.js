@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('https://be-chat.herokuapp.com');
 let message = document.getElementById("message"),
   target = document.getElementById("messages"),
   form = document.getElementById('message-form');
@@ -12,9 +12,8 @@ firebase.initializeApp({
 window.onload = () => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-
       socket.emit("message:history");
-      socket.emit("username:update", user.displayName);
+      socket.emit("username:update", (user.displayName != null) ? user.displayName : user.email);
 
       socket.on("username:updated", (username) => {});
       socket.on('message:history', (messages) => {
@@ -22,6 +21,13 @@ window.onload = () => {
         messages.forEach(message => {
           let entry = document.createElement('li');
           entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.username}: <i>${message.content}</i>`;
+          
+          if (message.username === user.displayName || message.username === user.email) {
+            entry.classList.add('me');
+          } else {
+            entry.classList.add('him')
+          }
+
           target.appendChild(entry);
 
           window.scrollTo(0, document.body.scrollHeight);
@@ -31,6 +37,13 @@ window.onload = () => {
       socket.on('message:created', (message) => {
         let entry = document.createElement('li');
         entry.innerHTML = `[${new Date(message.createdAt).toLocaleTimeString()}] ${message.username}: <i>${message.content}</i>`;
+        
+        if (message.username === user.displayName || message.username === user.email) {
+            entry.classList.add('me');
+          } else {
+            entry.classList.add('him')
+          }
+
         target.appendChild(entry);
 
         window.scroll({
@@ -42,7 +55,7 @@ window.onload = () => {
       form.addEventListener("submit", e => {
         e.preventDefault();
         socket.emit("message:create", {
-          username: user.displayName,
+          username: (user.displayName != null) ? user.displayName : user.email,
           content: message.value
         });
 
