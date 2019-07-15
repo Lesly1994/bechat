@@ -21,7 +21,7 @@ form input {
   margin-right: 0.5%; }
 
 input {
-  border-radius: 3px;
+  border-radius: 8px;
   border: solid 1px #cccccc; }
 
 form button {
@@ -29,7 +29,7 @@ form button {
   background: #343a40;
   border: none;
   padding: 5px;
-  border-radius: 3px;
+  border-radius: 8px;
   cursor: pointer;
   color: white; }
 
