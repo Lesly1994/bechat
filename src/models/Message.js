@@ -4,7 +4,7 @@ module.exports = mongoose.model(
   "Message",
   new mongoose.Schema(
     {
-      username: String,
+      user: Object,
       content: String
     },
     { versionKey: false, timestamps: true }
